@@ -216,7 +216,7 @@ drag = $special.drag = {
 				drag.textselect( true ); // enable text selection
 				// if suppressing click events...
 				if ( dd.click === false && dd.dragging )
-					$.data( dd.mousedown, "suppress.click", new Date().getTime() + 5 );
+					$.data( dd.mousedown, "suppress.click", event.timeStamp || (event.originalEvent && event.originalEvent.timeStamp) );
 				dd.dragging = drag.touched = false; // deactivate element	
 				break;
 		}
@@ -367,7 +367,7 @@ drag.callback.prototype = {
 // patch $.event.$dispatch to allow suppressing clicks
 var $dispatch = $event.dispatch;
 $event.dispatch = function( event ){
-	if ( $.data( this, "suppress."+ event.type ) - new Date().getTime() > 0 ){
+	if ( $.data( this, "suppress."+ event.type ) >= (event.timeStamp || (event.originalEvent && event.originalEvent.timeStamp)) - 50 ){
 		$.removeData( this, "suppress."+ event.type );
 		return;
 	}
